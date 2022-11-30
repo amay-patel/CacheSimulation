@@ -124,7 +124,7 @@ int main() {
             cout << "Enter the cache size: " << endl;
             cin >> cacheSize;
 
-
+            fullyAssociative(addresses, bytesPerBlock, numBlocks, cacheSize);
         }
         else {
             cout << "Invalid replacement strategy" << endl;
@@ -144,7 +144,7 @@ int main() {
         cout << "Enter the cache size: " << endl;
         cin >> cacheSize;
 
-
+        directMap(addresses, bytesPerBlock, numSets, cacheSize);
     }
     else if(cacheType == "Set Associative") {
         string replaceStrat;
@@ -168,7 +168,7 @@ int main() {
             cout << "Enter the cache size: " << endl;
             cin >> cacheSize;
 
-
+            setAssociative(addresses, bytesPerBlock, numBlocks, numSets, cacheSize);
         }
         else {
             cout << "Invalid replacement strategy" << endl;
