@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <map>
+#include <cmath>
+#include <set>
 
 using namespace std;
 
@@ -80,8 +83,34 @@ void fullyAssociative(vector<string>& addresses, int bytesPerBlock, int numBlock
 
 }
 
-void directMap(vector<string>& addresses, int bytesPerBlock, int numSets, int cacheSize) {
-
+void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
+    int hits = 0;
+    int misses = 0;
+    map<string, string> treeMap;
+    for(int i = 0; i < addresses.size(); i++) {
+        int numLines = cacheSize/bytesPerBlock;
+        int lineWidth = log2(numLines);
+        int offsetWidth = log2(bytesPerBlock);
+        int tagWidth = addresses.at(i).length() - lineWidth - offsetWidth;
+        string tag = addresses.at(i).substr(0, tagWidth);
+        string line = addresses.at(i).substr(tagWidth, lineWidth);
+        if(treeMap.find(line) != treeMap.end()) {
+            if(treeMap.at(line) == tag) {
+                hits++;
+            }
+            else {
+                misses++;
+                treeMap.at(line) = tag;
+            }
+        }
+        else {
+            misses++;
+            treeMap.insert(make_pair(line, tag));
+        }
+    }
+    cout << "Hits: " << hits << endl;
+    cout << "Misses: " << misses << endl;
+    cout << "Hit Rate: " << 100 * (double)hits/(double)(hits + misses) << "%" << endl;
 }
 
 void setAssociative(vector<string>& addresses, int bytesPerBlock, int numBlocks, int numSets, int cacheSize) {
@@ -94,15 +123,16 @@ int main() {
     cout << "Enter filename: " << endl;
     cin >> filename;
 
-    string currDirectory = "Trace files/" + filename;
+    string currDirectory = "Trace files/" + filename + ".trace";
     vector<string> addresses;
     readFile(currDirectory, addresses);
     for(int i = 0; i < addresses.size(); i++) {
-        convertToBin(addresses.at(i));
+        addresses.at(i) = convertToBin(addresses.at(i));
     }
 
     string cacheType;
     cout << "Enter cache type: " << endl;
+    cin >> ws;
     getline(cin, cacheType);
 
     if(cacheType == "Fully Associative") {
@@ -132,19 +162,15 @@ int main() {
     }
     else if(cacheType == "Direct Mapped") {
         int bytesPerBlock = 0;
-        int numSets = 0;
         int cacheSize = 0;
 
         cout << "Enter how many bytes per block: " << endl;
         cin >> bytesPerBlock;
 
-        cout << "Enter how many sets: " << endl;
-        cin >> numSets;
-
         cout << "Enter the cache size: " << endl;
         cin >> cacheSize;
 
-        directMap(addresses, bytesPerBlock, numSets, cacheSize);
+        directMap(addresses, bytesPerBlock, cacheSize);
     }
     else if(cacheType == "Set Associative") {
         string replaceStrat;
