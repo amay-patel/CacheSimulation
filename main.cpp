@@ -6,14 +6,14 @@
 
 using namespace std;
 
-void readFile(string filename, vector<string>& addresses) {
-    ifstream file(filename);
+void readFile(string& directory, vector<string>& addresses) {
+    ifstream file(directory);
     string line;
     while (getline(file, line)) {
         istringstream iss(line);
         string currAddress;
-        std::getline(iss, currAddress, ' ');
-        std::getline(iss, currAddress, ' ');
+        getline(iss, currAddress, ' ');
+        getline(iss, currAddress, ' ');
         addresses.push_back(currAddress);
     }
 }
@@ -76,94 +76,99 @@ string convertToBin(const string& hexAddress) {
     return binAddress;
 }
 
-void directMap(const string& filename, int blockSize, int cacheSize) {
+void fullyAssociative(vector<string>& addresses, int bytesPerBlock, int numBlocks, int cacheSize) {
 
 }
 
-void setAssociative(const string& filename, int blockSize, int cacheSize, string& replaceStrat) {
+void directMap(vector<string>& addresses, int bytesPerBlock, int numSets, int cacheSize) {
 
 }
-void fullyAssociative(const string& filename, int blockSize, int cacheSize, string& replaceStrat) {
+
+void setAssociative(vector<string>& addresses, int bytesPerBlock, int numBlocks, int numSets, int cacheSize) {
 
 }
+
 
 int main() {
-    string cacheType = "";
-    string filename = "gcc.trace";
+    string filename;
+    cout << "Enter filename: " << endl;
+    cin >> filename;
+
+    string currDirectory = "Trace files/" + filename;
     vector<string> addresses;
-    readFile(filename, addresses);
+    readFile(currDirectory, addresses);
     for(int i = 0; i < addresses.size(); i++) {
         convertToBin(addresses.at(i));
     }
+
+    string cacheType;
     cout << "Enter cache type: " << endl;
     getline(cin, cacheType);
 
     if(cacheType == "Fully Associative") {
-        string replaceStrat = "";
+        string replaceStrat;
         cout << "Enter replacement strategy: " << endl;
-        getline(cin, replaceStrat);
+        cin >> replaceStrat;
 
-        if(replaceStrat == "LRU") {
-            int blockSize = 0;
-            cout << "Enter block size: " << endl;
-            cin >> blockSize;
-
+        if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
+            int bytesPerBlock = 0;
+            int numBlocks = 0;
             int cacheSize = 0;
-            cout << "Enter cache size: " << endl;
+
+            cout << "Enter how many bytes per block: " << endl;
+            cin >> bytesPerBlock;
+
+            cout << "Enter how many blocks: " << endl;
+            cin >> numBlocks;
+
+            cout << "Enter the cache size: " << endl;
             cin >> cacheSize;
 
-            fullyAssociative(filename, blockSize, cacheSize, replaceStrat);
-        }
-        else if(replaceStrat == "FIFO") {
-            int blockSize = 0;
-            cout << "Enter block size: " << endl;
-            cin >> blockSize;
 
-            int cacheSize = 0;
-            cout << "Enter cache size: " << endl;
-            cin >> cacheSize;
-
-            fullyAssociative(filename, blockSize, cacheSize, replaceStrat);
         }
         else {
             cout << "Invalid replacement strategy" << endl;
         }
     }
     else if(cacheType == "Direct Mapped") {
-        int blockSize = 0;
-        cout << "Enter block size: " << endl;
-        cin >> blockSize;
-
+        int bytesPerBlock = 0;
+        int numSets = 0;
         int cacheSize = 0;
-        cout << "Enter cache size: " << endl;
+
+        cout << "Enter how many bytes per block: " << endl;
+        cin >> bytesPerBlock;
+
+        cout << "Enter how many sets: " << endl;
+        cin >> numSets;
+
+        cout << "Enter the cache size: " << endl;
         cin >> cacheSize;
+
+
     }
     else if(cacheType == "Set Associative") {
-        string replaceStrat = "";
+        string replaceStrat;
         cout << "Enter replacement strategy: " << endl;
-        getline(cin, replaceStrat);
-
-        if(replaceStrat == "LRU") {
-            int blockSize = 0;
-            cout << "Enter block size: " << endl;
-            cin >> blockSize;
-
+        cin >> replaceStrat;
+        if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
+            int bytesPerBlock = 0;
+            int numBlocks = 0;
+            int numSets = 0;
             int cacheSize = 0;
-            cout << "Enter cache size: " << endl;
+
+            cout << "Enter how many bytes per block: " << endl;
+            cin >> bytesPerBlock;
+
+            cout << "Enter how many blocks: " << endl;
+            cin >> numBlocks;
+
+            cout << "Enter how many sets: " << endl;
+            cin >> numSets;
+
+            cout << "Enter the cache size: " << endl;
             cin >> cacheSize;
 
-            setAssociative(filename, blockSize, cacheSize, replaceStrat);
-        }
-        else if(replaceStrat == "FIFO") {
-            int blockSize = 0;
-            cout << "Enter block size: " << endl;
-            cin >> blockSize;
 
-            int cacheSize = 0;
-            cout << "Enter cache size: " << endl;
-            cin >> cacheSize;
-
-            setAssociative(filename, blockSize, cacheSize, replaceStrat);
         }
         else {
             cout << "Invalid replacement strategy" << endl;
