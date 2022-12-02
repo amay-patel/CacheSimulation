@@ -179,8 +179,8 @@ int main() {
     string currDirectory = "Trace files/" + filename + ".trace";
     vector<string> addresses;
     readFile(currDirectory, addresses);
-    for(int i = 0; i < addresses.size(); i++) {
-        addresses.at(i) = convertToBin(addresses.at(i));
+    for(string& address : addresses) {
+        address = convertToBin(address);
     }
 
     string cacheType;
@@ -205,10 +205,12 @@ int main() {
 
             fullyAssociative(addresses, bytesPerBlock, cacheSize, replaceStrat);
         }
+
         else {
             cout << "Invalid replacement strategy" << endl;
         }
     }
+
     else if(cacheType == "Direct Mapped") {
         int bytesPerBlock = 0;
         int cacheSize = 0;
@@ -221,10 +223,12 @@ int main() {
 
         directMap(addresses, bytesPerBlock, cacheSize);
     }
+
     else if(cacheType == "Set Associative") {
         string replaceStrat;
         cout << "Enter replacement strategy: " << endl;
         cin >> replaceStrat;
+
         if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
             int bytesPerBlock = 0;
             int numBlocks = 0;
@@ -245,10 +249,12 @@ int main() {
 
             setAssociative(addresses, bytesPerBlock, numBlocks, numSets, cacheSize, replaceStrat);
         }
+
         else {
             cout << "Invalid replacement strategy" << endl;
         }
     }
+
     else {
         cout << "Invalid cache type" << endl;
     }
