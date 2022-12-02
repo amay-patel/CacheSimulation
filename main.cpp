@@ -1,3 +1,7 @@
+//
+// Created by Amay Patel on 11/28/22
+//
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -5,7 +9,8 @@
 #include <sstream>
 #include <map>
 #include <cmath>
-#include <set>
+#include <list>
+#include <queue>
 
 using namespace std;
 
@@ -79,8 +84,55 @@ string convertToBin(const string& hexAddress) {
     return binAddress;
 }
 
-void fullyAssociative(vector<string>& addresses, int bytesPerBlock, int numBlocks, int cacheSize) {
-
+void fullyAssociative(vector<string>& addresses, int bytesPerBlock, int cacheSize, string& replacementPolicy) {
+    int hits = 0;
+    int misses = 0;
+    map<string, string> treeMap;
+    queue<string> tagQueue;
+    list<string> tagList;
+    for(int i = 0; i < addresses.size(); i++) {
+        int numLines = cacheSize / bytesPerBlock;
+        int offsetWidth = log2(bytesPerBlock);
+        int tagWidth = addresses.at(i).length() - offsetWidth;
+        string tag = addresses.at(i).substr(0, tagWidth);
+        string offset = addresses.at(i).substr(tagWidth, offsetWidth);
+        if(treeMap.find(tag) == treeMap.end()) {
+            misses++;
+            if(treeMap.size() < numLines) {
+                treeMap.insert(make_pair(tag, offset));
+                if(replacementPolicy == "FIFO") {
+                    tagQueue.push(tag);
+                }
+                else if(replacementPolicy == "LRU") {
+                    tagList.push_back(tag);
+                }
+            }
+            else if(treeMap.size() == numLines) {
+                if(replacementPolicy == "FIFO") {
+                    treeMap.erase(tagQueue.front());
+                    tagQueue.pop();
+                    tagQueue.push(tag);
+                }
+                else if(replacementPolicy == "LRU") {
+                    treeMap.erase(tagList.front());
+                    tagList.pop_front();
+                    tagList.push_back(tag);
+                }
+                treeMap.insert(make_pair(tag, offset));
+            }
+        }
+        else {
+            hits++;
+            if(replacementPolicy == "LRU") {
+                tagList.remove(tag);
+                tagList.push_back(tag);
+            }
+        }
+    }
+    cout << endl;
+    cout << "Hits: " << hits << endl;
+    cout << "Misses: " << misses << endl;
+    cout << "Hit Rate: " << 100 * (double)hits/(double)(hits + misses) << "%" << endl;
 }
 
 void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
@@ -94,7 +146,11 @@ void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
         int tagWidth = addresses.at(i).length() - lineWidth - offsetWidth;
         string tag = addresses.at(i).substr(0, tagWidth);
         string line = addresses.at(i).substr(tagWidth, lineWidth);
-        if(treeMap.find(line) != treeMap.end()) {
+        if(treeMap.find(line) == treeMap.end()) {
+            misses++;
+            treeMap.insert(make_pair(line, tag));
+        }
+        else {
             if(treeMap.at(line) == tag) {
                 hits++;
             }
@@ -103,17 +159,14 @@ void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
                 treeMap.at(line) = tag;
             }
         }
-        else {
-            misses++;
-            treeMap.insert(make_pair(line, tag));
-        }
     }
+    cout << endl;
     cout << "Hits: " << hits << endl;
     cout << "Misses: " << misses << endl;
     cout << "Hit Rate: " << 100 * (double)hits/(double)(hits + misses) << "%" << endl;
 }
 
-void setAssociative(vector<string>& addresses, int bytesPerBlock, int numBlocks, int numSets, int cacheSize) {
+void setAssociative(vector<string>& addresses, int bytesPerBlock, int numBlocks, int numSets, int cacheSize, string& replacementPolicy) {
 
 }
 
@@ -142,19 +195,15 @@ int main() {
 
         if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
             int bytesPerBlock = 0;
-            int numBlocks = 0;
             int cacheSize = 0;
 
             cout << "Enter how many bytes per block: " << endl;
             cin >> bytesPerBlock;
 
-            cout << "Enter how many blocks: " << endl;
-            cin >> numBlocks;
-
             cout << "Enter the cache size: " << endl;
             cin >> cacheSize;
 
-            fullyAssociative(addresses, bytesPerBlock, numBlocks, cacheSize);
+            fullyAssociative(addresses, bytesPerBlock, cacheSize, replaceStrat);
         }
         else {
             cout << "Invalid replacement strategy" << endl;
@@ -194,7 +243,7 @@ int main() {
             cout << "Enter the cache size: " << endl;
             cin >> cacheSize;
 
-            setAssociative(addresses, bytesPerBlock, numBlocks, numSets, cacheSize);
+            setAssociative(addresses, bytesPerBlock, numBlocks, numSets, cacheSize, replaceStrat);
         }
         else {
             cout << "Invalid replacement strategy" << endl;
