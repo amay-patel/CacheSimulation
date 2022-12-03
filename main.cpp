@@ -166,8 +166,87 @@ void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
     cout << "Hit Rate: " << 100 * (double)hits/(double)(hits + misses) << "%" << endl;
 }
 
-void setAssociative(vector<string>& addresses, int bytesPerBlock, int numBlocks, int numSets, int cacheSize, string& replacementPolicy) {
+void setAssociative(vector<string>& addresses, int bytesPerBlock, int nSetWay, int cacheSize, string& replacementPolicy) {
+    int hits = 0;
+    int misses = 0;
+    map<string, map<string, string>> treeMap;
+    map<string, queue<string>> tagQueueMap;
+    map<string, list<string>> tagListMap;
+    for(int i = 0; i < addresses.size(); i++) {
+        int numOfSets = (cacheSize / bytesPerBlock) / nSetWay;
+        int setWidth = log2(numOfSets);
+        int offsetWidth = log2(bytesPerBlock);
+        int tagWidth = addresses.at(i).length() - setWidth - offsetWidth;
+        string tag = addresses.at(i).substr(0, tagWidth);
+        string set = addresses.at(i).substr(tagWidth, setWidth);
+        string offset = addresses.at(i).substr(tagWidth + setWidth, offsetWidth);
 
+        if(treeMap.find(set) == treeMap.end()) {
+            misses++;
+            map<string, string> tempMap;
+            tempMap.insert(make_pair(tag, offset));
+            treeMap.insert(make_pair(set, tempMap));
+
+            if(replacementPolicy == "FIFO") {
+                queue<string> q;
+                q.push(tag);
+                tagQueueMap.insert(make_pair(set, q));
+            }
+
+            else if(replacementPolicy == "LRU") {
+                list<string> l;
+                l.push_back(tag);
+                tagListMap.insert(make_pair(set, l));
+            }
+        }
+
+        else {
+
+            if(treeMap.at(set).find(tag) == treeMap.at(set).end()) {
+                misses++;
+
+                if(treeMap.at(set).size() < nSetWay) {
+                    treeMap.at(set).insert(make_pair(tag, offset));
+
+                    if(replacementPolicy == "FIFO") {
+                        tagQueueMap.at(set).push(tag);
+                    }
+
+                    else if(replacementPolicy == "LRU") {
+                        tagListMap.at(set).push_back(tag);
+                    }
+                }
+
+                else if(treeMap.at(set).size() == nSetWay) {
+                    if(replacementPolicy == "FIFO") {
+                        treeMap.at(set).erase(tagQueueMap.at(set).front());
+                        tagQueueMap.at(set).pop();
+                        tagQueueMap.at(set).push(tag);
+                    }
+
+                    else if(replacementPolicy == "LRU") {
+                        treeMap.at(set).erase(tagListMap.at(set).front());
+                        tagListMap.at(set).pop_front();
+                        tagListMap.at(set).push_back(tag);
+                    }
+                    treeMap.at(set).insert(make_pair(tag, offset));
+                }
+            }
+
+            else {
+                hits++;
+
+                if(replacementPolicy == "LRU") {
+                    tagListMap.at(set).remove(tag);
+                    tagListMap.at(set).push_back(tag);
+                }
+            }
+        }
+    }
+    cout << endl;
+    cout << "Hits: " << hits << endl;
+    cout << "Misses: " << misses << endl;
+    cout << "Hit Rate: " << 100 * (double)hits/(double)(hits + misses) << "%" << endl;
 }
 
 
@@ -231,23 +310,19 @@ int main() {
 
         if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
             int bytesPerBlock = 0;
-            int numBlocks = 0;
-            int numSets = 0;
             int cacheSize = 0;
+            int nSetWay = 0;
 
             cout << "Enter how many bytes per block: " << endl;
             cin >> bytesPerBlock;
 
-            cout << "Enter how many blocks: " << endl;
-            cin >> numBlocks;
-
-            cout << "Enter how many sets: " << endl;
-            cin >> numSets;
-
             cout << "Enter the cache size: " << endl;
             cin >> cacheSize;
 
-            setAssociative(addresses, bytesPerBlock, numBlocks, numSets, cacheSize, replaceStrat);
+            cout << "Enter number in to represent n-set way: " << endl;
+            cin >> nSetWay;
+
+            setAssociative(addresses, bytesPerBlock, nSetWay, cacheSize, replaceStrat);
         }
 
         else {
