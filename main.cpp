@@ -129,10 +129,7 @@ void fullyAssociative(vector<string>& addresses, int bytesPerBlock, int cacheSiz
             }
         }
     }
-    cout << endl;
-    cout << "Hits: " << hits << endl;
-    cout << "Misses: " << misses << endl;
-    cout << "Hit Rate: " << 100 * (double)hits/(double)(hits + misses) << "%" << endl;
+    cout << "Hit Rate: " << (double)hits/(double)(hits + misses) << endl;
 }
 
 void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
@@ -161,9 +158,7 @@ void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
         }
     }
     cout << endl;
-    cout << "Hits: " << hits << endl;
-    cout << "Misses: " << misses << endl;
-    cout << "Hit Rate: " << 100 * (double)hits/(double)(hits + misses) << "%" << endl;
+    cout << "Hit Rate: " << (double)hits/(double)(hits + misses) << endl;
 }
 
 void setAssociative(vector<string>& addresses, int bytesPerBlock, int nSetWay, int cacheSize, string& replacementPolicy) {
@@ -244,11 +239,50 @@ void setAssociative(vector<string>& addresses, int bytesPerBlock, int nSetWay, i
         }
     }
     cout << endl;
-    cout << "Hits: " << hits << endl;
-    cout << "Misses: " << misses << endl;
-    cout << "Hit Rate: " << 100 * (double)hits/(double)(hits + misses) << "%" << endl;
+    cout << "Hit Rate: " << (double)hits/(double)(hits + misses) << endl;
 }
 
+void simulateValues(vector<string>& addresses) {
+    int start = pow(2, 9);
+    int end = pow(2, 16);
+
+    string fifo = "FIFO";
+    string lru = "LRU";
+
+    cout << "Fully Associative (FIFO)" << endl;
+    for(int i = start; i <= end; i *= 2) {
+        fullyAssociative(addresses, 64, i, fifo);
+    }
+    cout << endl;
+
+    cout << "Fully Associative (LRU)" << endl;
+    for(int i = start; i <= end; i *= 2) {
+        fullyAssociative(addresses, 64, i, lru);
+    }
+    cout << endl;
+
+    cout << "Direct Mapped" << endl;
+    for(int i = start; i <= end; i *= 2) {
+        directMap(addresses, 64, i);
+    }
+    cout << endl;
+
+    for(int i = 2; i <= 8; i *= 2) {
+        cout << "Set Associative " << i << "-way (FIFO)";
+        cout << endl;
+        for(int j = start; j <= end; j *= 2) {
+            setAssociative(addresses, 64, i, j, fifo);
+        }
+    }
+
+    for(int i = 2; i <= 8; i *= 2) {
+        cout << "Set Associative " << i << "-way (LRU)";
+        cout << endl;
+        for(int j = start; j <= end; j *= 2) {
+            setAssociative(addresses, 64, i, j, lru);
+        }
+    }
+}
 
 int main() {
     string filename;
@@ -261,77 +295,77 @@ int main() {
     for(string& address : addresses) {
         address = convertToBin(address);
     }
-
-    string cacheType;
-    cout << "Enter cache type: " << endl;
-    cin >> ws;
-    getline(cin, cacheType);
-
-    if(cacheType == "Fully Associative") {
-        string replaceStrat;
-        cout << "Enter replacement strategy: " << endl;
-        cin >> replaceStrat;
-
-        if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
-            int bytesPerBlock = 0;
-            int cacheSize = 0;
-
-            cout << "Enter how many bytes per block: " << endl;
-            cin >> bytesPerBlock;
-
-            cout << "Enter the cache size: " << endl;
-            cin >> cacheSize;
-
-            fullyAssociative(addresses, bytesPerBlock, cacheSize, replaceStrat);
-        }
-
-        else {
-            cout << "Invalid replacement strategy" << endl;
-        }
-    }
-
-    else if(cacheType == "Direct Mapped") {
-        int bytesPerBlock = 0;
-        int cacheSize = 0;
-
-        cout << "Enter how many bytes per block: " << endl;
-        cin >> bytesPerBlock;
-
-        cout << "Enter the cache size: " << endl;
-        cin >> cacheSize;
-
-        directMap(addresses, bytesPerBlock, cacheSize);
-    }
-
-    else if(cacheType == "Set Associative") {
-        string replaceStrat;
-        cout << "Enter replacement strategy: " << endl;
-        cin >> replaceStrat;
-
-        if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
-            int bytesPerBlock = 0;
-            int cacheSize = 0;
-            int nSetWay = 0;
-
-            cout << "Enter how many bytes per block: " << endl;
-            cin >> bytesPerBlock;
-
-            cout << "Enter the cache size: " << endl;
-            cin >> cacheSize;
-
-            cout << "Enter number in to represent n-set way: " << endl;
-            cin >> nSetWay;
-
-            setAssociative(addresses, bytesPerBlock, nSetWay, cacheSize, replaceStrat);
-        }
-
-        else {
-            cout << "Invalid replacement strategy" << endl;
-        }
-    }
-
-    else {
-        cout << "Invalid cache type" << endl;
-    }
+    simulateValues(addresses);
+//    string cacheType;
+//    cout << "Enter cache type: " << endl;
+//    cin >> ws;
+//    getline(cin, cacheType);
+//
+//    if(cacheType == "Fully Associative") {
+//        string replaceStrat;
+//        cout << "Enter replacement strategy: " << endl;
+//        cin >> replaceStrat;
+//
+//        if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
+//            int bytesPerBlock = 0;
+//            int cacheSize = 0;
+//
+//            cout << "Enter how many bytes per block: " << endl;
+//            cin >> bytesPerBlock;
+//
+//            cout << "Enter the cache size: " << endl;
+//            cin >> cacheSize;
+//
+//            fullyAssociative(addresses, bytesPerBlock, cacheSize, replaceStrat);
+//        }
+//
+//        else {
+//            cout << "Invalid replacement strategy" << endl;
+//        }
+//    }
+//
+//    else if(cacheType == "Direct Mapped") {
+//        int bytesPerBlock = 0;
+//        int cacheSize = 0;
+//
+//        cout << "Enter how many bytes per block: " << endl;
+//        cin >> bytesPerBlock;
+//
+//        cout << "Enter the cache size: " << endl;
+//        cin >> cacheSize;
+//
+//        directMap(addresses, bytesPerBlock, cacheSize);
+//    }
+//
+//    else if(cacheType == "Set Associative") {
+//        string replaceStrat;
+//        cout << "Enter replacement strategy: " << endl;
+//        cin >> replaceStrat;
+//
+//        if(replaceStrat == "FIFO" || replaceStrat == "LRU") {
+//            int bytesPerBlock = 0;
+//            int cacheSize = 0;
+//            int nSetWay = 0;
+//
+//            cout << "Enter how many bytes per block: " << endl;
+//            cin >> bytesPerBlock;
+//
+//            cout << "Enter the cache size: " << endl;
+//            cin >> cacheSize;
+//
+//            cout << "Enter number in to represent n-set way: " << endl;
+//            cin >> nSetWay;
+//
+//            setAssociative(addresses, bytesPerBlock, nSetWay, cacheSize, replaceStrat);
+//        }
+//
+//        else {
+//            cout << "Invalid replacement strategy" << endl;
+//        }
+//    }
+//
+//    else {
+//        cout << "Invalid cache type" << endl;
+//    }
     return 0;
 }
