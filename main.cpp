@@ -184,7 +184,6 @@ void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
             }
         }
     }
-    cout << endl;
     cout << "Hit Rate: " << (double)hits/(double)(hits + misses) << endl;
 }
 
@@ -274,7 +273,6 @@ void setAssociative(vector<string>& addresses, int bytesPerBlock, int nSetWay, i
             }
         }
     }
-    cout << endl;
     cout << "Hit Rate: " << (double)hits/(double)(hits + misses) << endl;
 }
 
@@ -337,7 +335,7 @@ int main() {
     for(string& address : addresses) {
         address = convertToBin(address);
     }
-    //simulateValues(addresses);
+//    simulateValues(addresses);
     string cacheType;
     cout << "Enter cache type: " << endl;
     cin >> ws;
@@ -352,15 +350,37 @@ int main() {
             int bytesPerBlock = 0;
             int cacheSize = 0;
 
-            cout << "Enter how many bytes per block: " << endl;
-            cin >> bytesPerBlock;
+            while(true) {
 
-            cout << "Enter the cache size: " << endl;
-            cin >> cacheSize;
+                cout << "Enter bytes per block: " << endl;
+                cin >> bytesPerBlock;
 
+                if(bytesPerBlock >= 4 && (bytesPerBlock & bytesPerBlock - 1) == 0) {
+                    break;
+                }
+
+                else {
+                    cout << "Invalid number of bytes in a block" << endl;
+                    cout << endl;
+                }
+            }
+
+            while(true) {
+
+                cout << "Enter the cache size: " << endl;
+                cin >> cacheSize;
+
+                if(cacheSize <= 0 && (cacheSize & cacheSize - 1) == 0) {
+                    cout << "Cache size must be a power of 2" << endl;
+                    cout << endl;
+                }
+
+                else {
+                    break;
+                }
+            }
             fullyAssociative(addresses, bytesPerBlock, cacheSize, replaceStrat);
         }
-
         else {
             cout << "Invalid replacement strategy" << endl;
         }
@@ -370,12 +390,32 @@ int main() {
         int bytesPerBlock = 0;
         int cacheSize = 0;
 
-        cout << "Enter how many bytes per block: " << endl;
-        cin >> bytesPerBlock;
+        while(true) {
 
-        cout << "Enter the cache size: " << endl;
-        cin >> cacheSize;
+            cout << "Enter bytes per block: " << endl;
+            cin >> bytesPerBlock;
 
+            if(bytesPerBlock >= 4 && (bytesPerBlock & bytesPerBlock - 1) == 0) {
+                break;
+            }
+
+            else {
+                cout << "Invalid number of bytes in a block" << endl;
+                cout << endl;
+            }
+        }
+        while(true) {
+
+            cout << "Enter the cache size: " << endl;
+            cin >> cacheSize;
+
+            if (cacheSize <= 0 && (cacheSize & cacheSize - 1) == 0) {
+                cout << "Cache size must be a power of 2" << endl;
+                cout << endl;
+            } else {
+                break;
+            }
+        }
         directMap(addresses, bytesPerBlock, cacheSize);
     }
 
@@ -389,11 +429,35 @@ int main() {
             int cacheSize = 0;
             int nSetWay = 0;
 
-            cout << "Enter how many bytes per block: " << endl;
-            cin >> bytesPerBlock;
+            while(true) {
 
-            cout << "Enter the cache size: " << endl;
-            cin >> cacheSize;
+                cout << "Enter bytes per block: " << endl;
+                cin >> bytesPerBlock;
+
+                if(bytesPerBlock >= 4 && (bytesPerBlock & bytesPerBlock - 1) == 0) {
+                    break;
+                }
+
+                else {
+                    cout << "Invalid number of bytes in a block" << endl;
+                    cout << endl;
+                }
+            }
+
+            while(true) {
+
+                cout << "Enter the cache size: " << endl;
+                cin >> cacheSize;
+
+                if(cacheSize <= 0 && (cacheSize & cacheSize - 1) == 0) {
+                    cout << "Cache size must be a power of 2" << endl;
+                    cout << endl;
+                }
+
+                else {
+                    break;
+                }
+            }
 
             cout << "Enter number in to represent n-set way: " << endl;
             cin >> nSetWay;

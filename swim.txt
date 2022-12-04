@@ -1,0 +1,89 @@
+Fully Associative (FIFO)
+Hit Rate: 0.619345
+Hit Rate: 0.889424
+Hit Rate: 0.955767
+Hit Rate: 0.972245
+Hit Rate: 0.981678
+Hit Rate: 0.985788
+Hit Rate: 0.987463
+Hit Rate: 0.988087
+
+Fully Associative (LRU)
+Hit Rate: 0.650028
+Hit Rate: 0.91078
+Hit Rate: 0.967183
+Hit Rate: 0.97866
+Hit Rate: 0.986652
+Hit Rate: 0.987981
+Hit Rate: 0.988341
+Hit Rate: 0.988417
+
+Direct Mapped
+Hit Rate: 0.651529
+Hit Rate: 0.761868
+Hit Rate: 0.818901
+Hit Rate: 0.94081
+Hit Rate: 0.965613
+Hit Rate: 0.979135
+Hit Rate: 0.982295
+Hit Rate: 0.987117
+
+Set Associative 2-way (FIFO)
+Hit Rate: 0.665939
+Hit Rate: 0.833858
+Hit Rate: 0.916713
+Hit Rate: 0.952816
+Hit Rate: 0.979904
+Hit Rate: 0.984864
+Hit Rate: 0.987203
+Hit Rate: 0.987955
+
+Set Associative 4-way (FIFO)
+Hit Rate: 0.651707
+Hit Rate: 0.838726
+Hit Rate: 0.953149
+Hit Rate: 0.97086
+Hit Rate: 0.980573
+Hit Rate: 0.985583
+Hit Rate: 0.987381
+Hit Rate: 0.988064
+
+Set Associative 8-way (FIFO)
+Hit Rate: 0.619345
+Hit Rate: 0.863259
+Hit Rate: 0.955434
+Hit Rate: 0.972272
+Hit Rate: 0.981197
+Hit Rate: 0.98564
+Hit Rate: 0.987447
+Hit Rate: 0.988103
+
+Set Associative 2-way (LRU)
+Hit Rate: 0.679267
+Hit Rate: 0.843865
+Hit Rate: 0.926588
+Hit Rate: 0.959168
+Hit Rate: 0.982994
+Hit Rate: 0.986537
+Hit Rate: 0.988051
+Hit Rate: 0.988262
+
+Set Associative 4-way (LRU)
+Hit Rate: 0.671289
+Hit Rate: 0.855798
+Hit Rate: 0.963462
+Hit Rate: 0.976843
+Hit Rate: 0.985052
+Hit Rate: 0.987651
+Hit Rate: 0.988212
+Hit Rate: 0.988384
+
+Set Associative 8-way (LRU)
+Hit Rate: 0.650028
+Hit Rate: 0.890113
+Hit Rate: 0.96583
+Hit Rate: 0.977892
+Hit Rate: 0.985969
+Hit Rate: 0.987767
+Hit Rate: 0.988321
+Hit Rate: 0.9884
