@@ -191,7 +191,7 @@ void directMap(vector<string>& addresses, int bytesPerBlock, int cacheSize) {
  * @brief This function will calculate the hit rate for a n-way set associative cache
  * @param addresses the vector of addresses that will be used to calculate the hit rate
  * @param bytesPerBlock the amount of bytes per block in cache
- * @param nSetWay the number of sets in the cache
+ * @param nSetWay the set associativity of the cache
  * @param cacheSize the size of the cache
  * @param replacementPolicy the replacement policy the user wants to use (FIFO or LRU)
  */
