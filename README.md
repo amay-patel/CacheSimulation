@@ -7,8 +7,9 @@ The Cache Simulator is a program that simulates the behavior of a cache memory. 
 ## Installation and Usage
 
 1. Clone the repository with `git clone` or download the zip file.
-2. Open the project in an IDE like CLion/Visual Studio or in a code editor like Visual Studio Code.
-3. Build the project and run the executable.
-4. Follow the instructions in the program and enter the appropriate values for the cache configuration.*
+2. Place the 'Trace files' folder into the same directory as the executable. 
+3. Open the project in an IDE like CLion/Visual Studio or in a code editor like Visual Studio Code. 
+4. Build the project and run the executable. 
+5. Follow the instructions in the program and enter the appropriate values for the cache configuration.*
 
 *\*Note: The program will ask for a positive number of bytes that you want for the cache and a positive number of bytes per block. These values need to be a power of 2 i.e. 512, 1024 and the number of bytes per block needs to be at least 4*
