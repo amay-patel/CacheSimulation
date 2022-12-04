@@ -335,7 +335,7 @@ int main() {
     for(string& address : addresses) {
         address = convertToBin(address);
     }
-//    simulateValues(addresses);
+    //simulateValues(addresses);
     string cacheType;
     cout << "Enter cache type: " << endl;
     cin >> ws;
